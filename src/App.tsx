@@ -1,34 +1,39 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import Stack from '@mui/material/Stack';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Header from './Header';
+import type { Dayjs } from 'dayjs';
+import type { FinisherData } from './FinisherListItem';
+import dayjs from 'dayjs';
+import FinisherListItem from './FinisherListItem';
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [finisherData, setFinisherData] = useState<FinisherData[]>([])
+  const [timeStarted, setTimeStarted] = useState<Dayjs | null>(null)
+
+  const addFinisher = () => {
+    setFinisherData(old => [...old, { timeTaken: dayjs(), startNumber: "" }])
+  }
+
+  const editFinisher = (index: number, update: (old: FinisherData) => FinisherData) => {
+    setFinisherData(old => old.map((item, i) => index === i ? update(item) : item))
+  }
+
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} sx={{
+        justifyContent: "center",
+      }}>
+        <Header timeStarted={timeStarted} setTimeStarted={setTimeStarted} addFinisher={addFinisher} />
+        <Stack>
+          {finisherData.map((data, i) => <FinisherListItem key={i} timeStarted={timeStarted} data={data} editFinisher={(it) => editFinisher(i, it)} />)}
+        </Stack>
+      </Stack>
+    </LocalizationProvider>
+
   )
 }
 
