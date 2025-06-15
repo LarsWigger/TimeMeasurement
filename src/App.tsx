@@ -28,7 +28,7 @@ function App() {
     for (let i = 0; i < data.length; i++) {
       const item = data[i]
       const time = dayjs(item.timeTaken?.diff(timeStarted, "millisecond")).utc()
-      let line = `${item.startNumber},:${time.hour()}:${('' + time.minute()).padStart(2, '0')}:${('' + time.second()).padStart(2, '0')}`;
+      let line = `${item.startNumber},${time.hour()}:${('' + time.minute()).padStart(2, '0')}:${('' + time.second()).padStart(2, '0')}`;
       str += line + '\r\n';
     }
     return str;
