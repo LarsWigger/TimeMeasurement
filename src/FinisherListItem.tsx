@@ -33,14 +33,14 @@ export default function FinisherListItem({ timeStarted, data, editFinisher, dele
                     })
                 }} />
                 <TimePicker
-                    value={dayjs(data.timeTaken?.diff(timeStarted, "millisecond"))}
+                    value={dayjs(data.timeTaken?.diff(timeStarted, "millisecond")).utc()}
                     ampm={false}
-                    views={['minutes', 'seconds']}
+                    views={['hours', 'minutes', 'seconds']}
                     onChange={value => {
                         editFinisher(old => {
                             return {
                                 ...old,
-                                timeTaken: timeStarted?.add(value?.valueOf() || 0, "millisecond") ?? dayjs()
+                                timeTaken: (timeStarted?.add(value?.valueOf() || 0, "millisecond") ?? dayjs()).utc()
                             }
                         })
                     }} />
