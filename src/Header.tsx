@@ -18,7 +18,12 @@ export default function Header({ timeStarted, setTimeStarted, addFinisher, expor
     return <Stack sx={{
         alignItems: "center",
     }}>
-        <TimePicker label="Uhrzeit beim Start" value={timeStarted} disabled={timeStarted === null} onChange={setTimeStarted} ampm={false} />
+        <TimePicker label="Uhrzeit beim Start"
+            value={timeStarted}
+            disabled={timeStarted === null}
+            onChange={setTimeStarted}
+            ampm={false}
+            views={['hours', 'minutes', 'seconds']} />
         <p>{`${Math.floor(secondsPassed / 60)}:${('' + secondsPassed % 60).padStart(2, '0')}`}</p>
         <ButtonGroup>
             <Button variant="contained" disabled={timeStarted === null} onClick={addFinisher}>Ankunft</Button>

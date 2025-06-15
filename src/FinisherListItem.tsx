@@ -36,7 +36,6 @@ export default function FinisherListItem({ timeStarted, data, editFinisher, dele
                     value={dayjs(data.timeTaken?.diff(timeStarted, "millisecond"))}
                     ampm={false}
                     views={['minutes', 'seconds']}
-                    format="mm:ss"
                     onChange={value => {
                         editFinisher(old => {
                             return {
