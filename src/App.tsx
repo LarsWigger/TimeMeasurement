@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -7,6 +7,8 @@ import type { Dayjs } from 'dayjs';
 import type { FinisherData } from './FinisherListItem';
 import dayjs from 'dayjs';
 import FinisherListItem from './FinisherListItem';
+import IconButton from '@mui/material/IconButton';
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 
 function App() {
 
@@ -24,12 +26,28 @@ function App() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack direction={{ xs: 'column', sm: 'row' }} sx={{
-        justifyContent: "center",
-      }}>
+      <Stack direction={{ xs: 'column', sm: 'row' }}
+        sx={{
+          justifyContent: 'center',
+        }}
+        spacing={2}>
         <Header timeStarted={timeStarted} setTimeStarted={setTimeStarted} addFinisher={addFinisher} />
-        <Stack>
-          {finisherData.map((data, i) => <FinisherListItem key={i} timeStarted={timeStarted} data={data} editFinisher={(it) => editFinisher(i, it)} />)}
+        <Stack spacing={2}>
+          {finisherData.map((data, i) =>
+            <Fragment key={i}>
+              <IconButton
+                aria-label='Hinzufügen'
+                onClick={() => {
+                  setFinisherData(old => [...old.slice(0, i), { timeTaken: data.timeTaken, startNumber: "" }, ...old.slice(i)])
+                }}>
+                <AddCircleOutlineOutlinedIcon />
+              </IconButton>
+              <FinisherListItem
+                timeStarted={timeStarted} data={data}
+                editFinisher={(it) => editFinisher(i, it)}
+                deleteSelf={() => { setFinisherData(finisherData.filter((_, index) => i != index)) }} />
+            </Fragment>
+          )}
         </Stack>
       </Stack>
     </LocalizationProvider>
