@@ -23,6 +23,28 @@ function App() {
     setFinisherData(old => old.map((item, i) => index === i ? update(item) : item))
   }
 
+  const convertToCSV = (data: FinisherData[]) => {
+    let str = '';
+    for (let i = 0; i < data.length; i++) {
+      const item = data[i]
+      const time = dayjs(item.timeTaken?.diff(timeStarted, "millisecond"))
+      let line = `${item.startNumber},${time.minute()}:${('' + time.second()).padStart(2, '0')}`;
+      str += line + '\r\n';
+    }
+    return str;
+  };
+
+  const exportCsv = () => {
+    const csvData = new Blob([convertToCSV(finisherData)], { type: 'text/csv' });
+    const csvURL = URL.createObjectURL(csvData);
+    const link = document.createElement('a');
+    link.href = csvURL;
+    link.download = "results.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -31,7 +53,11 @@ function App() {
           justifyContent: 'center',
         }}
         spacing={2}>
-        <Header timeStarted={timeStarted} setTimeStarted={setTimeStarted} addFinisher={addFinisher} />
+        <Header
+          timeStarted={timeStarted}
+          setTimeStarted={setTimeStarted}
+          addFinisher={addFinisher}
+          exportCsv={exportCsv} />
         <Stack spacing={2}>
           {finisherData.map((data, i) =>
             <Fragment key={i}>
