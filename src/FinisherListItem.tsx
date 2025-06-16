@@ -21,7 +21,7 @@ export type FinisherData = {
 
 export default function FinisherListItem({ timeStarted, data, editFinisher, deleteSelf }: FinisherListItemProps) {
 
-    return <Card>
+    return <Card variant="outlined">
         <CardContent>
             <Stack direction={{ xs: 'column', sm: 'row' }}>
                 <TextField label="Startnummer" type="number" value={data.startNumber} onChange={event => {

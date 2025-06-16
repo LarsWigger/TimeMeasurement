@@ -9,6 +9,8 @@ import dayjs from 'dayjs';
 import FinisherListItem from './FinisherListItem';
 import IconButton from '@mui/material/IconButton';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import { createTheme, ThemeProvider } from '@mui/material';
+import { deDE } from '@mui/x-date-pickers/locales';
 
 function App() {
 
@@ -45,39 +47,45 @@ function App() {
     document.body.removeChild(link);
   }
 
+  const theme = createTheme(
+    {},
+    deDE,
+  );
+
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack direction={{ xs: 'column', sm: 'row' }}
-        sx={{
-          justifyContent: 'center',
-        }}
-        spacing={2}>
-        <Header
-          timeStarted={timeStarted}
-          setTimeStarted={setTimeStarted}
-          addFinisher={addFinisher}
-          exportCsv={exportCsv} />
-        <Stack spacing={2}>
-          {finisherData.map((data, i) =>
-            <Fragment key={i}>
-              <IconButton
-                aria-label='Hinzufügen'
-                onClick={() => {
-                  setFinisherData(old => [...old.slice(0, i), { timeTaken: data.timeTaken, startNumber: "" }, ...old.slice(i)])
-                }}>
-                <AddCircleOutlineOutlinedIcon />
-              </IconButton>
-              <FinisherListItem
-                timeStarted={timeStarted} data={data}
-                editFinisher={(it) => editFinisher(i, it)}
-                deleteSelf={() => { setFinisherData(finisherData.filter((_, index) => i != index)) }} />
-            </Fragment>
-          )}
+    <ThemeProvider theme={theme}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Stack direction={{ xs: 'column', sm: 'row' }}
+          sx={{
+            justifyContent: 'center',
+          }}
+          spacing={2}>
+          <Header
+            timeStarted={timeStarted}
+            setTimeStarted={setTimeStarted}
+            addFinisher={addFinisher}
+            exportCsv={exportCsv} />
+          <Stack spacing={2}>
+            {finisherData.map((data, i) =>
+              <Fragment key={i}>
+                <IconButton
+                  aria-label='Hinzufügen'
+                  onClick={() => {
+                    setFinisherData(old => [...old.slice(0, i), { timeTaken: data.timeTaken, startNumber: "" }, ...old.slice(i)])
+                  }}>
+                  <AddCircleOutlineOutlinedIcon />
+                </IconButton>
+                <FinisherListItem
+                  timeStarted={timeStarted} data={data}
+                  editFinisher={(it) => editFinisher(i, it)}
+                  deleteSelf={() => { setFinisherData(finisherData.filter((_, index) => i != index)) }} />
+              </Fragment>
+            )}
+          </Stack>
         </Stack>
-      </Stack>
-    </LocalizationProvider>
-
+      </LocalizationProvider>
+    </ThemeProvider>
   )
 }
 
